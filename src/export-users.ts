@@ -1,24 +1,31 @@
-import { TableService, TableUtilities, TableQuery } from "azure-storage";
 import * as dotenv from "dotenv";
-import * as storage from "azure-storage";
 
 dotenv.config();
 
 const { CosmosClient } = require("@azure/cosmos");
-// const { azure } = require('azure-storage');
 
-const endpoint = process.env.COSMOSDB_ENDPOINT;
-const key = process.env.COSMOSDB_KEY;
-const cosmosdb_database = process.env.COSMOSDB_DATABASE;
-const cosmosdb_container = process.env.COSMOSDB_CONTAINER;
+const source_key = process.env.SOURCE_COSMOSDB_KEY;
+const source_endpoint = process.env.SOURCE_COSMOSDB_ENDPOINT;
+const source_cosmosdb_database = process.env.SOURCE_COSMOSDB_DATABASE;
+const source_cosmosdb_container = process.env.SOURCE_COSMOSDB_CONTAINER;
 
-// TODO: remove hardcoded
-const storageaccount_tableName = "bulkmessages";
-const storageaccount_partitionKey = "bonus-vacanze";
+const destination_endpoint = process.env.DESTINATION_COSMOSDB_ENDPOINT;
+const destination_key = process.env.DESTINATION_COSMOSDB_KEY;
+const destination_cosmosdb_database = process.env.DESTINATION_COSMOSDB_DATABASE;
+const destination_cosmosdb_container = process.env.DESTINATION_COSMOSDB_CONTAINER;
+
+const prefix_partitionKey = process.env.PREFIX_PARTITIONKEY;
 
 enum sendStatus {
     NOT_SENDED,
     SENDED
+};
+
+const newItem = {
+    fiscalCode: "",
+    sendStatus: sendStatus.NOT_SENDED,
+    onboardingDate: "",
+    onboardingTs: 0,
 };
 
 async function main() {
@@ -37,10 +44,10 @@ async function main() {
     // add 2 hour to convert from UTC to CEST
     toDate = toDate + (2 * 60 * 60);
 
-    const client = new CosmosClient({ endpoint, key });
+    const clientSource = new CosmosClient({ endpoint: source_endpoint, key: source_key });
 
-    const database = client.database(cosmosdb_database);
-    const container = database.container(cosmosdb_container);
+    const databaseSource = clientSource.database(source_cosmosdb_database);
+    const containerSource = databaseSource.container(source_cosmosdb_container);
 
     const querySpec = {
         query: "SELECT c.fiscalCode, c._ts FROM c WHERE c.version = @version AND c._ts >= @fromDate AND c._ts <= @toDate",
@@ -52,37 +59,59 @@ async function main() {
     };
 
     // read all items in the Items container
-    const { resources: items } = await container.items
+    const { resources: items } = await containerSource.items
         .query(querySpec)
         .fetchAll();
 
+    const clientDestination = new CosmosClient({ endpoint: destination_endpoint, key: destination_key });
+    const databaseDestination = clientDestination.database(destination_cosmosdb_database);
+    const containerDestination = databaseDestination.container(destination_cosmosdb_container);
 
-    // const tableSvc = azure.createTableService();
-    var tableSvc = storage.createTableService();
-
-    tableSvc.createTableIfNotExists(storageaccount_tableName, function (error: any, result: any, response: any) {
-        if (!error) {
-            // Table exists or created
-        }
-    });
-
-    var entGen = TableUtilities.entityGenerator;
+    let count = 0;
 
     for (const item of items) {
-        var task = {
-            PartitionKey: entGen.String(storageaccount_partitionKey),
-            RowKey: entGen.String(item.fiscalCode),
-            onboardingDate: entGen.DateTime(new Date(item._ts * 1000).toISOString()),
-            status: entGen.Int32(sendStatus.NOT_SENDED)
-        };
-        tableSvc.insertEntity(storageaccount_tableName, task, function (error: any, result: any, response: any) {
-            if (!error) {
-                // Entity updated
+
+        newItem.fiscalCode = prefix_partitionKey + item.fiscalCode;
+        newItem.onboardingDate = new Date(item._ts * 1000).toISOString();
+        newItem.onboardingTs = item._ts;
+
+        // console.log(newItem.fiscalCode);
+
+        try {
+            const { resource: createdItem } = await containerDestination.items.create(newItem);
+            // console.log(`\nCreated new item: ${createdItem.fiscalCode}\n`);
+            count = count + 1;
+            console.log(count);
+        } catch (e) {
+            if (e.code != 409) {
+                console.log(e);
             }
-        });
-        // console.log(`${item.fiscalCode}, ${item._ts} `);
+        }
     }
 
+    const queryCountSource = {
+        query: "SELECT VALUE COUNT(1) FROM c WHERE c.version = @version AND c._ts >= @fromDate AND c._ts <= @toDate",
+        parameters: [
+            { name: "@version", value: 0 },
+            { name: "@fromDate", value: fromDate },
+            { name: "@toDate", value: toDate }
+        ]
+    };
+    // read all items in the Items container
+    const { resources: countSource } = await containerSource.items
+        .query(queryCountSource)
+        .fetchAll();
+
+
+    const queryCountDestination = {
+        query: "SELECT VALUE COUNT(1) FROM c"
+    };
+    const { resources: countDestination } = await containerDestination.items
+        .query(queryCountDestination)
+        .fetchAll();
+
+    console.log('countSource: ' + countSource);
+    console.log('countDestination: ' + countDestination);
     console.log('export users finished');
 
 }
