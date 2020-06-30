@@ -26,12 +26,13 @@ const newItem = {
     sendStatus: sendStatus.NOT_SENDED,
     onboardingDate: "",
     onboardingTs: 0,
+    httpStatusCode: -1,
 };
 
 async function main() {
 
     // 15 april 2020 22:00:00 UTC -> 16 april 2020 00:00:00 CEST
-    let fromDate = Date.UTC(2020, 3, 15, 22, 0, 0);
+    let fromDate = Date.UTC(2019, 3, 15, 22, 0, 0);
     // from milliseconds to seconds precision
     fromDate = fromDate / 1000;
     // add 2 hour to convert from UTC to CEST
