@@ -16,6 +16,7 @@
     "@types/dotenv": "^8.2.0",
     "@types/jest": "^24.0.15",
     "@types/node": "10.14.1",
+    "@types/node-fetch": "^2.5.7",
     "danger": "^4.0.2",
     "danger-plugin-digitalcitizenship": "^0.3.1",
     "italia-tslint-rules": "*",
@@ -30,6 +31,7 @@
   "dependencies": {
     "@azure/cosmos": "^3.7.2",
     "azure-storage": "^2.10.3",
+    "node-fetch": "^2.6.0",
     "dotenv": "^8.2.0",
     "fp-ts": "1.17.4",
     "io-ts": "1.8.5"
