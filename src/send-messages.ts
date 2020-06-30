@@ -142,7 +142,7 @@ function delay(ms: number) {
 }
 
 const MESSAGE_CONTENT = {
-    subject: "È arrivato il Bonus Vacanze!",
+    subject: "E' arrivato il Bonus Vacanze!",
     markdown:
         "---\nit:\n    cta_1: \n        text: \"Richiedi il Bonus Vacanze\"\n        action: \"ioit://BONUS_AVAILABLE_LIST\"\nen:\n    cta_1: \n        text: \"Claim the Bonus Vacanze\"\n        action: \"ioit://BONUS_AVAILABLE_LIST\"\n---\n\n\nDa oggi è possibile richiedere il Bonus Vacanze, istituito dal Decreto Rilancio per incentivare  il turismo dopo il lockdown dovuto all'emergenza Coronavirus.\n\nIl bonus può valere fino a 500 euro, a seconda della numerosità del nucleo familiare, ed è spendibile per soggiorni in Italia, presso imprese turistiche ricettive, agriturismi e bed & breakfast, dal 1 luglio al 31 dicembre 2020. Possono ottenere il contributo i nuclei familiari con ISEE fino a 40.000 euro.\n\nSei maggiorenne e hai le caratteristiche per richiederlo? Scopri di più e richiedilo adesso.\n\nPer poter richiedere il Bonus Vacanze, devi avere installato l'ultima versione dell'app.\n\n[App Store](https://apps.apple.com/it/app/io/id1501681835)\n\n[Play Store](https://play.google.com/store/apps/details?id=it.pagopa.io.app)\n\n"
 };
