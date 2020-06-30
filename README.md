@@ -27,6 +27,10 @@ DESTINATION_COSMOSDB_CONTAINER="XXX"
 
 PREFIX_PARTITIONKEY="prefix-"
 MAX_USERS="10"
+
+API_URL="https://api.io.italia.it/api/v1/messages"
+SUBSCRIPTION_KEY="XXX"
+SLEEP_MS="1000"
 ```
 
 ### run 
