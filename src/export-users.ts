@@ -18,7 +18,7 @@ const prefix_partitionKey = process.env.PREFIX_PARTITIONKEY;
 
 const START_DATE = process.env.START_DATE || "";
 const END_DATE = process.env.END_DATE || "";
-const STEP_HOURS = Number(process.env.STEP_HOURS || 24);
+const STEP_MINUTES = Number(process.env.STEP_MINUTES || 5);
 
 
 enum sendStatus {
@@ -36,11 +36,18 @@ const newItem = {
 
 async function main() {
 
-    const startDate = new Date(START_DATE);
-    const maxDate = new Date(END_DATE);
+    let startDate = new Date(START_DATE);
+    let maxDate = new Date(END_DATE);
+
+    if (process.argv.length > 2) {
+        startDate = new Date(process.argv[2]);
+    }
+    if (process.argv.length > 3) {
+        maxDate = new Date(process.argv[3]);
+    }
 
     let fromDateTs = startDate.getTime() / 1000;
-    let toDateTs = (startDate.getTime() / 1000) + (STEP_HOURS * 60 * 60);
+    let toDateTs = (startDate.getTime() / 1000) + (STEP_MINUTES * 60);
 
     const clientSource = new CosmosClient({ endpoint: source_endpoint, key: source_key });
     const databaseSource = clientSource.database(source_cosmosdb_database);
@@ -94,7 +101,6 @@ async function main() {
                     console.log(e);
                 }
             }
-            count = count + 1;
 
         }
 
@@ -128,7 +134,7 @@ async function main() {
         console.log('countDestination: ' + countDestination);
         console.log('last toDateTs: ' + new Date(toDateTs * 1000).toISOString());
 
-        toDateTs = toDateTs + (STEP_HOURS * 60 * 60);
+        toDateTs = toDateTs + (STEP_MINUTES * 60);
         if (!exitWhile) {
             console.log('next toDateTs: ' + new Date(toDateTs * 1000).toISOString());
         }
