@@ -4,3 +4,6 @@ npm-debug.log
 yarn-error.log
 coverage
 .vscode
+ignore
+.env
+package-lock.json

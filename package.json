@@ -1,5 +1,5 @@
 {
-  "name": "TODO",
+  "name": "io-bulkmessages",
   "version": "0.0.1",
   "description": "TODO",
   "repository": "https://github.com/teamdigitale/TODO",
@@ -13,20 +13,25 @@
     "lint": "tslint --project ."
   },
   "devDependencies": {
-    "@types/jest": "^24.0.13",
+    "@types/dotenv": "^8.2.0",
+    "@types/jest": "^24.0.15",
     "@types/node": "10.14.1",
-    "danger": "^8.0.0",
-    "danger-plugin-digitalcitizenship": "*",
+    "danger": "^4.0.2",
+    "danger-plugin-digitalcitizenship": "^0.3.1",
     "italia-tslint-rules": "*",
     "jest": "^24.8.0",
-    "prettier": "^1.12.1",
+    "prettier": "^1.18.2",
     "rimraf": "^2.6.2",
     "ts-jest": "^24.0.2",
-    "tslint": "^5.1.0",
-    "typescript": "^3.5.0"
+    "ts-node": "^8.10.2",
+    "tslint": "^5.17.0",
+    "typescript": "^3.9.5"
   },
   "dependencies": {
-    "fp-ts": "1.12.0",
+    "@azure/cosmos": "^3.7.2",
+    "azure-storage": "^2.10.3",
+    "dotenv": "^8.2.0",
+    "fp-ts": "1.17.4",
     "io-ts": "1.8.5"
   },
   "jest": {
