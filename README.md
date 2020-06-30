@@ -32,4 +32,5 @@ MAX_USERS="10"
 ### run 
 
 ts-node src/export-users.ts
+ts-node src/send-messages.ts
 
