@@ -15,7 +15,8 @@ const max_users = Number(process.env.MAX_USERS);
 
 const API_URL = process.env.API_URL || "";
 const subscription_key = process.env.SUBSCRIPTION_KEY || "";
-const sleep_ms = Number(process.env.SLEEP_MS || 1000);
+const sleep_ms = Number(process.env.SLEEP_MS || 100);
+const sleep429_ms = Number(process.env.SLEEP429_MS || 1000);
 
 enum sendStatus {
     NOT_SENDED,
@@ -105,7 +106,7 @@ async function main() {
                 countNotSended = countNotSended + 1;
 
                 if (rawResponse.status == 429) {
-                    await delay(sleep_ms);
+                    await delay(sleep429_ms);
                     countNotSended429 = countNotSended429 + 1;
                 }
 
@@ -117,6 +118,8 @@ async function main() {
                 console.log('sending....: ' + countProgress);
                 countTmpProgress = 0;
             }
+
+            await delay(sleep_ms);
 
         } catch (e) {
             console.error(e);
