@@ -33,7 +33,8 @@ MAX_USERS="10"
 
 API_URL="https://api.io.italia.it/api/v1/messages"
 SUBSCRIPTION_KEY="XXX"
-SLEEP_MS="1000"
+SLEEP_MS="100"
+SLEEP429_MS="1000"
 ```
 
 ### run 
