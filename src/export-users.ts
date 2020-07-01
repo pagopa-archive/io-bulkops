@@ -132,11 +132,13 @@ async function main() {
         console.log(count);
         console.log('countSource: ' + countSource);
         console.log('countDestination: ' + countDestination);
-        console.log('last toDateTs: ' + new Date(toDateTs * 1000).toISOString());
+        console.log('Completed range ' + new Date(fromDateTs * 1000).toISOString() + ' ---- ' + new Date(toDateTs * 1000).toISOString());
 
+        fromDateTs = fromDateTs + (STEP_MINUTES * 60);
         toDateTs = toDateTs + (STEP_MINUTES * 60);
         if (!exitWhile) {
             console.log('next toDateTs: ' + new Date(toDateTs * 1000).toISOString());
+            console.log(`\n`);
         }
     }
 
