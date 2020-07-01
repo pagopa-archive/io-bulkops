@@ -35,7 +35,7 @@ API_URL="https://api.io.italia.it/api/v1/messages"
 SUBSCRIPTION_KEY="XXX"
 SLEEP_MS="100"
 SLEEP429_MS="1000"
-CF_NOSENDCSV="src/ignore/file.csv"
+CF_SKIPPED_CSV="src/ignore/file.csv"
 ```
 
 ### run 

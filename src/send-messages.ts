@@ -18,36 +18,21 @@ const API_URL = process.env.API_URL || "";
 const subscription_key = process.env.SUBSCRIPTION_KEY || "";
 const sleep_ms = Number(process.env.SLEEP_MS || 100);
 const sleep429_ms = Number(process.env.SLEEP429_MS || 1000);
-const cf_nosendcsv = process.env.CF_NOSENDCSV || "src/ignore/file.csv";
+const cf_skipped_csv = process.env.CF_SKIPPED_CSV || "src/ignore/file.csv";
 
 enum sendStatus {
     NOT_SENDED,
     SENDED,
-    NO_SEND
+    SKIPPED
 };
 
 async function main() {
 
-    const cf_nosend = fs.readFileSync(cf_nosendcsv).toString().replace(/\r\n/g, '\n').split('\n');
+    const cf_nosend = fs.readFileSync(cf_skipped_csv).toString().replace(/\r\n/g, '\n').split('\n');
 
     const clientDestination = new CosmosClient({ endpoint: destination_endpoint, key: destination_key });
     const databaseDestination = clientDestination.database(destination_cosmosdb_database);
     const containerDestination = databaseDestination.container(destination_cosmosdb_container);
-
-    const queryCount = {
-        query: "SELECT VALUE COUNT(1) FROM c WHERE c.sendStatus = @sendStatus OFFSET 0 LIMIT @maxUsers",
-        parameters: [
-            { name: "@sendStatus", value: sendStatus.NOT_SENDED },
-            { name: "@maxUsers", value: max_users }
-        ]
-    };
-
-    // read all items in the Items container
-    const { resources: countExpected } = await containerDestination.items
-        .query(queryCount)
-        .fetchAll();
-
-    console.log('countExpected: ' + countExpected);
 
     const querySpec = {
         query: "SELECT * FROM c WHERE c.sendStatus = @sendStatus OFFSET 0 LIMIT @maxUsers",
@@ -64,7 +49,7 @@ async function main() {
 
     let countProgress = 0;
     let countTmpProgress = 0;
-    let countNoSend = 0;
+    let countSkipped = 0;
     let countSended = 0;
     let countNotSended = 0;
     let countNotSended429 = 0;
@@ -77,22 +62,19 @@ async function main() {
 
             if (cf_nosend.indexOf(fiscalCodePure) != -1) {
 
-                item.httpStatusCode = sendStatus.NO_SEND;
+                item.httpStatusCode = sendStatus.SKIPPED;
 
                 const { id, fiscalCode } = item;
                 const { resource: updatedItem } = await containerDestination
                     .item(id, fiscalCode)
                     .replace(item);
 
-                // console.error(`Error item: ${updatedItem.id} - ${updatedItem.fiscalCode}`);
-                // console.error(`Error sendStatus to ${updatedItem.sendStatus}`);
-                console.log(`Info bonus activated\n`);
+                console.log(`1 user skipped\n`);
 
-                countNoSend = countNoSend + 1;
+                countSkipped = countSkipped + 1;
 
             } else {
 
-                // console.log(fiscalCodePure);
                 const rawResponse = await submitMessageforUser(fiscalCodePure, subscription_key);
                 const content = await rawResponse.json();
 
@@ -107,11 +89,6 @@ async function main() {
                         .item(id, fiscalCode)
                         .replace(item);
 
-                    // console.log(`Updated item: ${updatedItem.id} - ${updatedItem.fiscalCode}`);
-                    // console.log(`Updated sendStatus to ${updatedItem.sendStatus}`);
-                    // console.log(`Updated httpStatusCode to ${updatedItem.httpStatusCode}`);
-                    // console.log(`Updated idMessage to ${updatedItem.idMessage}\n`);
-
                     countSended = countSended + 1;
 
                 } else {
@@ -123,8 +100,6 @@ async function main() {
                         .item(id, fiscalCode)
                         .replace(item);
 
-                    // console.error(`Error item: ${updatedItem.id} - ${updatedItem.fiscalCode}`);
-                    // console.error(`Error sendStatus to ${updatedItem.sendStatus}`);
                     console.error(`Error httpStatusCode to ${updatedItem.httpStatusCode}\n`);
 
                     countNotSended = countNotSended + 1;
@@ -135,6 +110,7 @@ async function main() {
                     }
 
                 }
+
                 countTmpProgress = countTmpProgress + 1;
                 countProgress = countProgress + 1;
 
@@ -154,7 +130,7 @@ async function main() {
     }
 
     console.log('countProcessed: ' + countProgress);
-    console.log('countNoSend ok: ' + countNoSend);
+    console.log('countSkipped ok: ' + countSkipped);
     console.log('countSended ok: ' + countSended);
     console.log('countNotSended ko: ' + countNotSended);
     console.log('countNotSended429 ko: ' + countNotSended429);
