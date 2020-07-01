@@ -4,6 +4,7 @@ import fetch from "node-fetch";
 dotenv.config();
 
 const { CosmosClient } = require("@azure/cosmos");
+const fs = require('fs');
 
 const destination_endpoint = process.env.DESTINATION_COSMOSDB_ENDPOINT;
 const destination_key = process.env.DESTINATION_COSMOSDB_KEY;
@@ -17,13 +18,17 @@ const API_URL = process.env.API_URL || "";
 const subscription_key = process.env.SUBSCRIPTION_KEY || "";
 const sleep_ms = Number(process.env.SLEEP_MS || 100);
 const sleep429_ms = Number(process.env.SLEEP429_MS || 1000);
+const cf_nosendcsv = process.env.CF_NOSENDCSV || "src/ignore/file.csv";
 
 enum sendStatus {
     NOT_SENDED,
-    SENDED
+    SENDED,
+    NO_SEND
 };
 
 async function main() {
+
+    const cf_nosend = fs.readFileSync(cf_nosendcsv).toString().replace(/\r\n/g, '\n').split('\n');
 
     const clientDestination = new CosmosClient({ endpoint: destination_endpoint, key: destination_key });
     const databaseDestination = clientDestination.database(destination_cosmosdb_database);
@@ -59,6 +64,7 @@ async function main() {
 
     let countProgress = 0;
     let countTmpProgress = 0;
+    let countNoSend = 0;
     let countSended = 0;
     let countNotSended = 0;
     let countNotSended429 = 0;
@@ -66,33 +72,12 @@ async function main() {
     for (const item of items) {
 
         try {
+
             const fiscalCodePure = String(item.fiscalCode).replace(prefix_partitionKey, "");
 
-            // console.log(fiscalCodePure);
-            const rawResponse = await submitMessageforUser(fiscalCodePure, subscription_key);
-            const content = await rawResponse.json();
+            if (cf_nosend.indexOf(fiscalCodePure) != -1) {
 
-            if (rawResponse.status == 201) {
-
-                item.sendStatus = sendStatus.SENDED;
-                item.idMessage = content.id;
-                item.httpStatusCode = rawResponse.status;
-
-                const { id, fiscalCode } = item;
-                const { resource: updatedItem } = await containerDestination
-                    .item(id, fiscalCode)
-                    .replace(item);
-
-                // console.log(`Updated item: ${updatedItem.id} - ${updatedItem.fiscalCode}`);
-                // console.log(`Updated sendStatus to ${updatedItem.sendStatus}`);
-                // console.log(`Updated httpStatusCode to ${updatedItem.httpStatusCode}`);
-                // console.log(`Updated idMessage to ${updatedItem.idMessage}\n`);
-
-                countSended = countSended + 1;
-
-            } else {
-
-                item.httpStatusCode = rawResponse.status;
+                item.httpStatusCode = sendStatus.NO_SEND;
 
                 const { id, fiscalCode } = item;
                 const { resource: updatedItem } = await containerDestination
@@ -101,25 +86,66 @@ async function main() {
 
                 // console.error(`Error item: ${updatedItem.id} - ${updatedItem.fiscalCode}`);
                 // console.error(`Error sendStatus to ${updatedItem.sendStatus}`);
-                console.error(`Error httpStatusCode to ${updatedItem.httpStatusCode}\n`);
+                console.log(`Info bonus activated\n`);
 
-                countNotSended = countNotSended + 1;
+                countNoSend = countNoSend + 1;
 
-                if (rawResponse.status == 429) {
-                    await delay(sleep429_ms);
-                    countNotSended429 = countNotSended429 + 1;
+            } else {
+
+                // console.log(fiscalCodePure);
+                const rawResponse = await submitMessageforUser(fiscalCodePure, subscription_key);
+                const content = await rawResponse.json();
+
+                if (rawResponse.status == 201) {
+
+                    item.sendStatus = sendStatus.SENDED;
+                    item.idMessage = content.id;
+                    item.httpStatusCode = rawResponse.status;
+
+                    const { id, fiscalCode } = item;
+                    const { resource: updatedItem } = await containerDestination
+                        .item(id, fiscalCode)
+                        .replace(item);
+
+                    // console.log(`Updated item: ${updatedItem.id} - ${updatedItem.fiscalCode}`);
+                    // console.log(`Updated sendStatus to ${updatedItem.sendStatus}`);
+                    // console.log(`Updated httpStatusCode to ${updatedItem.httpStatusCode}`);
+                    // console.log(`Updated idMessage to ${updatedItem.idMessage}\n`);
+
+                    countSended = countSended + 1;
+
+                } else {
+
+                    item.httpStatusCode = rawResponse.status;
+
+                    const { id, fiscalCode } = item;
+                    const { resource: updatedItem } = await containerDestination
+                        .item(id, fiscalCode)
+                        .replace(item);
+
+                    // console.error(`Error item: ${updatedItem.id} - ${updatedItem.fiscalCode}`);
+                    // console.error(`Error sendStatus to ${updatedItem.sendStatus}`);
+                    console.error(`Error httpStatusCode to ${updatedItem.httpStatusCode}\n`);
+
+                    countNotSended = countNotSended + 1;
+
+                    if (rawResponse.status == 429) {
+                        await delay(sleep429_ms);
+                        countNotSended429 = countNotSended429 + 1;
+                    }
+
+                }
+                countTmpProgress = countTmpProgress + 1;
+                countProgress = countProgress + 1;
+
+                if (countTmpProgress >= 100) {
+                    console.log('sending....: ' + countProgress);
+                    countTmpProgress = 0;
                 }
 
-            }
-            countTmpProgress = countTmpProgress + 1;
-            countProgress = countProgress + 1;
+                await delay(sleep_ms);
 
-            if (countTmpProgress >= 100) {
-                console.log('sending....: ' + countProgress);
-                countTmpProgress = 0;
             }
-
-            await delay(sleep_ms);
 
         } catch (e) {
             console.error(e);
@@ -128,6 +154,7 @@ async function main() {
     }
 
     console.log('countProcessed: ' + countProgress);
+    console.log('countNoSend ok: ' + countNoSend);
     console.log('countSended ok: ' + countSended);
     console.log('countNotSended ko: ' + countNotSended);
     console.log('countNotSended429 ko: ' + countNotSended429);
@@ -147,7 +174,7 @@ function delay(ms: number) {
 const MESSAGE_CONTENT = {
     subject: "E' arrivato il Bonus Vacanze!",
     markdown:
-        "---\nit:\n    cta_1: \n        text: \"Richiedi il Bonus Vacanze\"\n        action: \"ioit://BONUS_AVAILABLE_LIST\"\nen:\n    cta_1: \n        text: \"Claim the Bonus Vacanze\"\n        action: \"ioit://BONUS_AVAILABLE_LIST\"\n---\n\n\nDa oggi è possibile richiedere il Bonus Vacanze, istituito dal Decreto Rilancio per incentivare  il turismo dopo il lockdown dovuto all'emergenza Coronavirus.\n\nIl bonus può valere fino a 500 euro, a seconda della numerosità del nucleo familiare, ed è spendibile per soggiorni in Italia, presso imprese turistiche ricettive, agriturismi e bed & breakfast, dal 1 luglio al 31 dicembre 2020. Possono ottenere il contributo i nuclei familiari con ISEE fino a 40.000 euro.\n\nSei maggiorenne e hai le caratteristiche per richiederlo? Scopri di più e richiedilo adesso.\n\nPer poter richiedere il Bonus Vacanze, devi avere installato l'ultima versione dell'app.\n\n[App Store](https://apps.apple.com/it/app/io/id1501681835)\n\n[Play Store](https://play.google.com/store/apps/details?id=it.pagopa.io.app)\n\n"
+        "---\nit:\n    cta_1: \n        text: \"Richiedi il Bonus Vacanze\"\n        action: \"ioit://BONUS_AVAILABLE_LIST\"\nen:\n    cta_1: \n        text: \"Claim the Bonus Vacanze\"\n        action: \"ioit://BONUS_AVAILABLE_LIST\"\n---\n\n\nDa oggi è possibile richiedere il Bonus Vacanze, istituito dal Decreto Rilancio per incentivare il turismo dopo il lockdown dovuto all'emergenza Coronavirus.\n\nIl bonus può valere fino a 500 euro, a seconda della numerosità del nucleo familiare, ed è spendibile per soggiorni in Italia, presso imprese turistiche ricettive, agriturismi e bed & breakfast, dal 1 luglio al 31 dicembre 2020. Possono ottenere il contributo i nuclei familiari con ISEE fino a 40.000 euro.\n\nSe non l'hai ancora chiesto o attivato e sei maggiorenne, scopri di più e richiedilo adesso.\n\nPer poter richiedere il Bonus Vacanze, devi avere installato l'ultima versione dell'app.\n\n[App Store](https://apps.apple.com/it/app/io/id1501681835)\n\n[Play Store](https://play.google.com/store/apps/details?id=it.pagopa.io.app)\n\n"
 };
 // Submit the message to a user identified by his/her fiscal code.
 async function submitMessageforUser(

@@ -31,10 +31,10 @@
   "dependencies": {
     "@azure/cosmos": "^3.7.2",
     "azure-storage": "^2.10.3",
-    "node-fetch": "^2.6.0",
     "dotenv": "^8.2.0",
     "fp-ts": "1.17.4",
-    "io-ts": "1.8.5"
+    "io-ts": "1.8.5",
+    "node-fetch": "^2.6.0"
   },
   "jest": {
     "testEnvironment": "node",
