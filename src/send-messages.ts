@@ -62,7 +62,7 @@ async function main() {
 
             if (cf_nosend.indexOf(fiscalCodePure) != -1) {
 
-                item.httpStatusCode = sendStatus.SKIPPED;
+                item.sendStatus = sendStatus.SKIPPED;
 
                 const { id, fiscalCode } = item;
                 const { resource: updatedItem } = await containerDestination
