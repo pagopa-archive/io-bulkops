@@ -34,7 +34,7 @@
     "dotenv": "^8.2.0",
     "fp-ts": "1.17.4",
     "io-ts": "1.8.5",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.1"
   },
   "jest": {
     "testEnvironment": "node",
