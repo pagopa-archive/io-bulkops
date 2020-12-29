@@ -1,5 +1,8 @@
 node_modules/
 dist/
+work/*
+!work/sample.csv
+!work/sample_skip.csv
 npm-debug.log
 yarn-error.log
 coverage
@@ -7,3 +10,4 @@ coverage
 ignore
 .env
 package-lock.json
+.DS_Store
