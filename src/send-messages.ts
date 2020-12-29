@@ -8,8 +8,8 @@ dotenv.config();
 
 const apiUrl = process.env.API_URL || '';
 const subscriptionKey = process.env.SUBSCRIPTION_KEY || '';
-const sleep_ms = Number(process.env.SLEEP_MS || 100);
-const sleep429_ms = Number(process.env.SLEEP429_MS || 1000);
+const sleep_ms = Number(process.env.SLEEP_MS || 10);
+const sleep429_ms = Number(process.env.SLEEP429_MS || 5000);
 const messageContent = process.env.MESSAGE_CONTENT || '';
 
 enum SendCSV {
