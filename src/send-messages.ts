@@ -141,6 +141,7 @@ async function main() {
   }
 
   appendLogFile(logFile, 'Info - messages to send: ' + cf_send_items.length);
+  console.log('Info - messages to send: ' + cf_send_items.length + '\n');
   let countMessageSended = 0;
   let countProgressMessageSended = 0;
 
