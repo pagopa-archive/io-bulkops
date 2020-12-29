@@ -53,8 +53,8 @@ async function main() {
       columns: true,
       skip_empty_lines: true,
     });
-    console.log('cf_send_items');
-    console.log(cf_send_items);
+    // console.log('cf_send_items');
+    // console.log(cf_send_items);
   } else {
     // File doesn't exist in path
     console.error(cf_send_csv + ' file not found');
@@ -70,8 +70,8 @@ async function main() {
       columns: true,
       skip_empty_lines: true,
     });
-    console.log('cf_sended_items');
-    console.log(cf_sended_items);
+    // console.log('cf_sended_items');
+    // console.log(cf_sended_items);
   } else {
     // File doesn't exist in path
   }
@@ -85,8 +85,8 @@ async function main() {
       columns: true,
       skip_empty_lines: true,
     });
-    console.log('cf_skip_csv');
-    console.log(cf_skip_csv);
+    // console.log('cf_skip_csv');
+    // console.log(cf_skip_csv);
   } else {
     // File doesn't exist in path
   }
@@ -112,8 +112,8 @@ async function main() {
     }
   }
 
-  console.log('cf_send_items clean');
-  console.log(cf_send_items);
+  // console.log('cf_send_items clean');
+  // console.log(cf_send_items);
 
   // create sending log items
   const cf_sendeding_csv = cf_send_csv.replace('.csv', '') + '_sendeding.csv';
