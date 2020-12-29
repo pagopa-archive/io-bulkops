@@ -140,7 +140,9 @@ async function main() {
     }
   }
 
-  appendLogFile(logFile, 'Info - message to send: ' + cf_send_items.length);
+  appendLogFile(logFile, 'Info - messages to send: ' + cf_send_items.length);
+  let countMessageSended = 0;
+  let countProgressMessageSended = 0;
 
   // send messages
   for (const cf of cf_send_items) {
@@ -159,6 +161,9 @@ async function main() {
 
       if (rawResponse.status == 201) {
         newSendItem.idMessage = content.id;
+
+        countMessageSended = countMessageSended + 1;
+        countProgressMessageSended = countProgressMessageSended + 1;
       } else {
         console.error(
           `Error - fiscalCode: ${cf[SendCSV.fiscalCode]} httpStatusCode: ${
@@ -182,6 +187,9 @@ async function main() {
           if (rawResponseRetry.status == 201) {
             newSendItem.idMessage = contentRetry.id;
             appendLogFile(logFile, `Error - 429 resolved`);
+            console.log(`Error - 429 resolved\n`);
+            countMessageSended = countMessageSended + 1;
+            countProgressMessageSended = countProgressMessageSended + 1;
           }
         }
       }
@@ -198,11 +206,19 @@ async function main() {
         { flag: 'a+' }
       );
 
+      if (countProgressMessageSended == 100) {
+        appendLogFile(logFile, `Info - messages sended: ${countMessageSended}`);
+        console.log(`Info - messages sended: ${countMessageSended}\n`);
+        countProgressMessageSended = 0;
+      }
       await delay(sleep_ms);
     } catch (e) {
       console.error(e);
     }
   }
+
+  appendLogFile(logFile, `Info - messages sended: ${countMessageSended}`);
+  console.log(`Info - messages sended: ${countMessageSended}\n`);
 
   let nowDate = new Date();
   const cf_sended_old_csv =
