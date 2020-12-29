@@ -13,17 +13,17 @@ const sleep429_ms = Number(process.env.SLEEP429_MS || 5000);
 const messageContent = process.env.MESSAGE_CONTENT || '';
 
 enum SendCSV {
-  fiscalCode = 'fiscalCode',
+  fiscal_code = 'fiscal_code',
 }
 
 enum SkipCSV {
-  fiscalCode = 'fiscalCode',
+  fiscal_code = 'fiscal_code',
 }
 
 enum SendedCSV {
-  fiscalCode = 'fiscalCode',
-  responseCode = 'responseCode',
-  idMessage = 'idMessage',
+  fiscal_code = 'fiscal_code',
+  response_code = 'response_code',
+  id_message = 'id_message',
 }
 
 async function main() {
@@ -95,19 +95,19 @@ async function main() {
     for (const cf_skip of cf_skip_items) {
       cf_send_items = cf_send_items.filter(
         (x: { [x: string]: any }) =>
-          x[SendCSV.fiscalCode] != cf_skip[SkipCSV.fiscalCode]
+          x[SendCSV.fiscal_code] != cf_skip[SkipCSV.fiscal_code]
       );
     }
   }
 
   if (cf_sended_items != undefined) {
     const cf_sended_skip_items = cf_sended_items.filter(
-      (x: { [x: string]: string }) => x[SendedCSV.responseCode] == '201'
+      (x: { [x: string]: string }) => x[SendedCSV.response_code] == '201'
     );
     for (const cf_sended_skip of cf_sended_skip_items) {
       cf_send_items = cf_send_items.filter(
         (x: { [x: string]: any }) =>
-          x[SendCSV.fiscalCode] != cf_sended_skip[SendedCSV.fiscalCode]
+          x[SendCSV.fiscal_code] != cf_sended_skip[SendedCSV.fiscal_code]
       );
     }
   }
@@ -119,18 +119,18 @@ async function main() {
   const cf_sendeding_csv = cf_send_csv.replace('.csv', '') + '_sendeding.csv';
   fs.writeFileSync(
     cf_sendeding_csv,
-    SendedCSV.fiscalCode +
+    SendedCSV.fiscal_code +
       ',' +
-      SendedCSV.responseCode +
+      SendedCSV.response_code +
       ',' +
-      SendedCSV.idMessage +
+      SendedCSV.id_message +
       '\n'
   );
 
   // backup existing sended messages
   if (cf_sended_items != undefined) {
     for (const cf of cf_sended_items.filter(
-      (x: { [x: string]: string }) => x[SendedCSV.responseCode] == '201'
+      (x: { [x: string]: string }) => x[SendedCSV.response_code] == '201'
     )) {
       fs.writeFileSync(
         cf_sendeding_csv,
@@ -149,44 +149,44 @@ async function main() {
   for (const cf of cf_send_items) {
     try {
       const rawResponse = await submitMessageforUser(
-        cf[SendCSV.fiscalCode],
+        cf[SendCSV.fiscal_code],
         subscriptionKey
       );
       const content = await rawResponse.json();
 
       let newSendItem = {
-        fiscalCode: cf[SendCSV.fiscalCode],
-        responseCode: rawResponse.status,
-        idMessage: '',
+        fiscal_code: cf[SendCSV.fiscal_code],
+        response_code: rawResponse.status,
+        id_message: '',
       };
 
       if (rawResponse.status == 201) {
-        newSendItem.idMessage = content.id;
+        newSendItem.id_message = content.id;
 
         countMessageSended = countMessageSended + 1;
         countProgressMessageSended = countProgressMessageSended + 1;
       } else {
         console.error(
-          `Error - fiscalCode: ${cf[SendCSV.fiscalCode]} httpStatusCode: ${
+          `Error - fiscal_code: ${cf[SendCSV.fiscal_code]} response_code: ${
             rawResponse.status
           }\n`
         );
         appendLogFile(
           logFile,
-          `Error - fiscalCode: ${cf[SendCSV.fiscalCode]} httpStatusCode: ${
+          `Error - fiscal_code: ${cf[SendCSV.fiscal_code]} response_code: ${
             rawResponse.status
           }`
         );
         if (rawResponse.status == 429) {
           await delay(sleep429_ms);
           const rawResponseRetry = await submitMessageforUser(
-            cf[SendCSV.fiscalCode],
+            cf[SendCSV.fiscal_code],
             subscriptionKey
           );
           const contentRetry = await rawResponseRetry.json();
-          newSendItem.responseCode = rawResponseRetry.status;
+          newSendItem.response_code = rawResponseRetry.status;
           if (rawResponseRetry.status == 201) {
-            newSendItem.idMessage = contentRetry.id;
+            newSendItem.id_message = contentRetry.id;
             appendLogFile(logFile, `Error - 429 resolved`);
             console.log(`Error - 429 resolved\n`);
             countMessageSended = countMessageSended + 1;
@@ -198,11 +198,11 @@ async function main() {
       // save sended message
       fs.writeFileSync(
         cf_sendeding_csv,
-        newSendItem.fiscalCode +
+        newSendItem.fiscal_code +
           ',' +
-          newSendItem.responseCode +
+          newSendItem.response_code +
           ',' +
-          newSendItem.idMessage +
+          newSendItem.id_message +
           '\n',
         { flag: 'a+' }
       );
