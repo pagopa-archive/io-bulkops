@@ -102,7 +102,9 @@ async function main() {
 
   if (cf_sended_items != undefined) {
     const cf_sended_skip_items = cf_sended_items.filter(
-      (x: { [x: string]: string }) => x[SendedCSV.response_code] == '201'
+      (x: { [x: string]: string }) =>
+        x[SendedCSV.response_code] == '201' ||
+        x[SendedCSV.response_code] == '200'
     );
     for (const cf_sended_skip of cf_sended_skip_items) {
       cf_send_items = cf_send_items.filter(
@@ -130,7 +132,9 @@ async function main() {
   // backup existing sended messages
   if (cf_sended_items != undefined) {
     for (const cf of cf_sended_items.filter(
-      (x: { [x: string]: string }) => x[SendedCSV.response_code] == '201'
+      (x: { [x: string]: string }) =>
+        x[SendedCSV.response_code] == '201' ||
+        x[SendedCSV.response_code] == '200'
     )) {
       fs.writeFileSync(
         cf_sendeding_csv,
@@ -160,7 +164,7 @@ async function main() {
         id_message: '',
       };
 
-      if (rawResponse.status == 201) {
+      if (rawResponse.status == 201 || rawResponse.status == 200) {
         newSendItem.id_message = content.id;
 
         countMessageSended = countMessageSended + 1;
@@ -185,7 +189,10 @@ async function main() {
           );
           const contentRetry = await rawResponseRetry.json();
           newSendItem.response_code = rawResponseRetry.status;
-          if (rawResponseRetry.status == 201) {
+          if (
+            rawResponseRetry.status == 201 ||
+            rawResponseRetry.status == 200
+          ) {
             newSendItem.id_message = contentRetry.id;
             appendLogFile(logFile, `Error - 429 resolved`);
             console.log(`Error - 429 resolved\n`);
@@ -215,6 +222,7 @@ async function main() {
       await delay(sleep_ms);
     } catch (e) {
       console.error(e);
+      appendLogFile(logFile, `Error - ${e}`);
     }
   }
 
