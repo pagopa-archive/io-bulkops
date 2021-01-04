@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import * as parsecsv from 'csv-parse/lib/sync';
-import { GetMessageContent } from './messages';
+import { getMessageContent } from './messages';
 import fetch from 'node-fetch';
 
 dotenv.config();
@@ -271,7 +271,7 @@ async function submitMessageforUser(
   subscription_key: string
 ) {
   let message = {
-    content: GetMessageContent(messageContent),
+    content: getMessageContent(messageContent),
     time_to_live: 3600,
     fiscal_code: fiscal_code,
   };
