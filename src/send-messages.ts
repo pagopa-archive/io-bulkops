@@ -129,7 +129,7 @@ async function main() {
       '\n'
   );
 
-  // backup existing sended messages
+  // backup existing sended messages in cf_sendeding_csv file
   if (cf_sended_items != undefined) {
     for (const cf of cf_sended_items.filter(
       (x: { [x: string]: string }) =>
@@ -138,7 +138,12 @@ async function main() {
     )) {
       fs.writeFileSync(
         cf_sendeding_csv,
-        cf.fiscalCode + ',' + cf.responseCode + ',' + cf.idMessage + '\n',
+        cf[SendedCSV.fiscal_code] +
+          ',' +
+          cf[SendedCSV.response_code] +
+          ',' +
+          cf[SendedCSV.id_message] +
+          '\n',
         { flag: 'a+' }
       );
     }
