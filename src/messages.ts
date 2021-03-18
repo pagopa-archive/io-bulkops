@@ -10,16 +10,26 @@ const bonusvacanzeStart1 = {
     '---\nit:\n    cta_1: \n        text: "Richiedi il Bonus Vacanze"\n        action: "ioit://BONUS_AVAILABLE_LIST"\nen:\n    cta_1: \n        text: "Claim the Bonus Vacanze"\n        action: "ioit://BONUS_AVAILABLE_LIST"\n---\n\n\nDal 1 luglio puoi richiedere il **Bonus Vacanze**, istituito dal Decreto Rilancio per incentivare il turismo dopo il lockdown dovuto all\'emergenza Coronavirus.\n\nIl bonus può valere **fino a 500 euro**, a seconda della numerosità del nucleo familiare, ed è spendibile per **soggiorni in Italia**, presso imprese turistiche ricettive, agriturismi e bed & breakfast, **dal 1 luglio al 31 dicembre 2020**.\n\n**Possono ottenere il contributo i nuclei familiari con ISEE fino a 40.000 euro.**\n\nSe non l’hai ancora chiesto o attivato e sei maggiorenne, scopri come funziona e richiedilo adesso.\n\nPer poter richiedere il Bonus Vacanze, devi avere aggiornato IO all\'ultima versione disponibile.\n\n[App Store](https://apps.apple.com/it/app/io/id1501681835)\n\n[Play Store](https://play.google.com/store/apps/details?id=it.pagopa.io.app)\n\n',
 };
 
+const customMessageUser1 = {
+  subject: "Anomalie riscontrate sul Cashback",
+  markdown:
+    "Gentile utente,\n\nstiamo riscontrando un comportamento anomalo rispetto al progetto Cashback ed effettuando delle verifiche sugli importi e il numero delle transazioni che hai effettuato.\n\nPer qualsiasi chiarimento contatta il **servizio clienti** tramite le relative icone che trovi in alto a destra nell'App IO.\n\n",
+};
+
 export function GetMessageContent(messageContent: string) {
   let content = undefined;
 
   switch (messageContent) {
-    case 'cashbackIBAN1': {
+    case "cashbackIBAN1": {
       content = cashbackIBAN1;
       break;
     }
-    case 'bonusvacanzeStart1': {
+    case "bonusvacanzeStart1": {
       content = bonusvacanzeStart1;
+      break;
+    }
+    case "customMessageUser1": {
+      content = customMessageUser1;
       break;
     }
     default: {

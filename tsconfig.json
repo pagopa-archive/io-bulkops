@@ -1,21 +1,25 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "rootDir": "src",
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,  /* Enable strict checking of property initialization in classes. */
+    "target": "es6",
+    "rootDir": ".",
     "outDir": "dist",
     "module": "commonjs",
     "moduleResolution": "node",
     "strict": true,
     "noImplicitAny": true,
-    "declaration": true,
+    "declaration": false,
     "sourceMap": true,
-    "lib": []
+    "lib": ["dom"],
+    "resolveJsonModule": true
   },
-  "include": [
-    "src/**/*"
-  ],
   "exclude": [
+    "__mocks__",
+    "dist",
     "node_modules",
-    "src/**/__tests__/*"
+    "**/__tests__/*",
+    "docker/**/*",
+    "work"
   ]
 }
