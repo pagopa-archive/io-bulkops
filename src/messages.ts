@@ -16,6 +16,11 @@ const customMessageUser1 = {
     "Gentile utente,\n\nstiamo riscontrando un comportamento anomalo rispetto al progetto Cashback ed effettuando delle verifiche sugli importi e il numero delle transazioni che hai effettuato.\n\nPer qualsiasi chiarimento contatta il **servizio clienti** tramite le relative icone che trovi in alto a destra nell'App IO.\n\n",
 };
 
+const cgnStart1 = {
+  subject: "E' arrivata la Carta Giovani Nazionale!",
+  markdown: '---\nit:\n    cta_1: \n        text: "Richiedi la Carta Giovani"\n        action: "ioit://CTA_START_CGN"\nen:\n    cta_1: \n        text: "Claim the Carta Giovani"\n        action: "ioit://CTA_START_CGN"\n---\n\n\nDa oggi i **cittadini italiani ed europei residenti in Italia, dai 18 ai 35** anni di età possono richiedere la **Carta Giovani Nazionale**, istituita dal Dipartimento per le Politiche Giovanili e il Servizio Civile Universale della Presidenza del Consiglio dei Ministri, per favorire la partecipazione ad attività culturali, sportive e ricreative, anche con finalità formative.\n\nLa Carta Giovani Nazionale **consente ai beneficiari di ottenere agevolazioni per accedere a beni e servizi di carattere culturale, sportivo e legato al benessere su tutto il territorio nazionale**.\n\nPuoi attivare la Carta Giovani tramite IO, oppure visualizzare maggiori dettagli sul sito dedicato alla Carta Giovani Nazionale.\n\nAttivala adesso!\n\nPer poter richiedere la tua Carta Giovani Nazionale, devi avere aggiornato IO all\'ultima versione disponibile.\n\n[App Store](https://apps.apple.com/it/app/io/id1501681835)\n\n[Play Store](https://play.google.com/store/apps/details?id=it.pagopa.io.app)\n\n'
+}
+
 export function GetMessageContent(messageContent: string) {
   let content = undefined;
 
@@ -30,6 +35,10 @@ export function GetMessageContent(messageContent: string) {
     }
     case "customMessageUser1": {
       content = customMessageUser1;
+      break;
+    }
+    case "cgnStart1": {
+      content = cgnStart1;
       break;
     }
     default: {
