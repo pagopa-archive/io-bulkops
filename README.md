@@ -6,7 +6,10 @@
 yarn install
 yarn build
 cp .env.example .env
+
 yarn ts-node src/send-messages work/sample.csv work/sample_skip.csv
+
+yarn ts-node src/get-profiles work/sample.csv work/sample_skip.csv
 ```
 
 ### sample .env file
@@ -14,6 +17,8 @@ yarn ts-node src/send-messages work/sample.csv work/sample_skip.csv
 ```bash
 # API_URL for test https://httpbin.org/anything do not send SUBSCRIPTION_KEY to this url!
 API_URL="https://api.io.italia.it/api/v1/messages"
+# or
+# API_URL="https://api.io.italia.it/api/v1/profiles"
 SUBSCRIPTION_KEY="XXX"
 SLEEP_MS="10"
 SLEEP429_MS="5000"
