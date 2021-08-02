@@ -10,6 +10,18 @@ const cashbackTransaction1 = {
     'Ciao! Stiamo effettuando delle verifiche su alcune **transazioni anomale** rilevate nell’ambito del Cashback: si tratta di transazioni **ricorrenti di importo irrisorio**, effettuate in numero elevato **presso lo stesso esercente, lo stesso giorno** e che, pertanto, appaiono **non qualificabili come "acquisti"** di beni o servizi, ai sensi del Programma.\n\nQueste transazioni, se legate a condotte abusive, non darebbero diritto ad alcun tipo di rimborso. Per questo, abbiamo provveduto a **stornare le operazioni “sospette”** dal sistema: puoi visualizzarle con il segno "–" nel dettaglio della tua card del Cashback.\n\n**Se pensi si tratti di un errore e le tue transazioni sono in regola, hai 7 giorni dalla data di invio di questo messaggio per provare che ci stiamo sbagliando!** Usa [questo modulo online](https://forms.gle/mHwWGUeCpb3WY6qK9) per dichiarare l’oggetto effettivo dell’acquisto a cui corrisponde ciascuna delle transazioni stornate.\n\nSe sei già stato oggetto di controlli e hai compilato il modulo in precedenza, utilizzalo soltanto per giustificare le nuove transazioni.\n\nRicevuto il tuo modulo, le tue transazioni - **se ritenute valide** ai fini del Cashback - **torneranno a essere conteggiate** ai fini del rimborso. Al contrario, saranno eliminate definitivamente dal Programma; questo accadrà anche in mancanza di un tuo riscontro a questa comunicazione entro i 7 giorni dall’invio.\n\n',
 };
 
+const cashbackEndPeriod1trxmin50 = {
+  subject: 'Spiacenti, non hai diritto al Cashback accumulato!',
+  markdown:
+    "Ti informiamo che il conteggio per i rimborsi del primo semestre 2021 del programma Cashback si è concluso.\n\nNon hai raggiunto le 50 transazioni necessarie per ottenere il rimborso.\n\nIl [Decreto Legge 30 giugno 2021](https://www.gazzettaufficiale.it/atto/serie_generale/caricaDettaglioAtto/originario?atto.dataPubblicazioneGazzetta=2021-06-30&atto.codiceRedazionale=21G00110&elenco30giorni=true), n.99 ha previsto **la sospensione del secondo semestre 2021** del Cashback.\nIl prossimo periodo, quindi, inizierà l'**1 gennaio 2022**: se desideri continuare a partecipare al Programma, l'iscrizione avverrà in automatico e potrai disiscriverti in qualsiasi momento.\n\nGrazie per aver partecipato!\n\n",
+};
+
+const cashbackEndPeriod1ErrataCorrigetrxmin50 = {
+  subject: 'Errata Corrige - Non hai diritto al Cashback accumulato!',
+  markdown:
+    "Ti informiamo che il conteggio per i rimborsi del primo semestre 2021 del programma Cashback si è concluso.\n\nNon hai raggiunto le 50 transazioni necessarie per ottenere il rimborso.\n\nIl [Decreto Legge 30 giugno 2021](https://www.gazzettaufficiale.it/atto/serie_generale/caricaDettaglioAtto/originario?atto.dataPubblicazioneGazzetta=2021-06-30&atto.codiceRedazionale=21G00110&elenco30giorni=true), n.99 ha previsto **la sospensione del secondo semestre 2021** del Cashback.\nIl prossimo periodo, quindi, inizierà l'**1 gennaio 2022**: se desideri continuare a partecipare al Programma, l'iscrizione avverrà in automatico e potrai disiscriverti in qualsiasi momento.\n\nGrazie per aver partecipato!\n\n",
+};
+
 const bonusvacanzeStart1 = {
   subject: "E' arrivato il Bonus Vacanze!",
   markdown:
@@ -38,6 +50,14 @@ export function GetMessageContent(messageContent: string) {
     }
     case 'cashbackTransaction1': {
       content = cashbackTransaction1;
+      break;
+    }
+    case 'cashbackEndPeriod1trxmin50': {
+      content = cashbackEndPeriod1trxmin50;
+      break;
+    }
+    case 'cashbackEndPeriod1ErrataCorrigetrxmin50': {
+      content = cashbackEndPeriod1ErrataCorrigetrxmin50;
       break;
     }
     case 'bonusvacanzeStart1': {
