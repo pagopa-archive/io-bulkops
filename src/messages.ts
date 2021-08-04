@@ -22,6 +22,12 @@ const cashbackEndPeriod1ErrataCorrigetrxmin50 = {
     "Ti informiamo che il conteggio per i rimborsi del primo semestre 2021 del programma Cashback si è concluso.\n\nNon hai raggiunto le 50 transazioni necessarie per ottenere il rimborso.\n\nIl [Decreto Legge 30 giugno 2021](https://www.gazzettaufficiale.it/atto/serie_generale/caricaDettaglioAtto/originario?atto.dataPubblicazioneGazzetta=2021-06-30&atto.codiceRedazionale=21G00110&elenco30giorni=true), n.99 ha previsto **la sospensione del secondo semestre 2021** del Cashback.\nIl prossimo periodo, quindi, inizierà l'**1 gennaio 2022**: se desideri continuare a partecipare al Programma, l'iscrizione avverrà in automatico e potrai disiscriverti in qualsiasi momento.\n\nGrazie per aver partecipato!\n\n",
 };
 
+const cashbackMissingIBAN1 = {
+  subject: 'Inserisci un IBAN per ricevere il rimborso',
+  markdown:
+    '---\nit:\n    cta_1: \n        text: "Vai al Cashback"\n        action: "ioit://CTA_BPD_IBAN_EDIT"\nen:\n    cta_1: \n        text: "Go to Cashback"\n        action: "ioit://CTA_BPD_IBAN_EDIT"\n---\n\n\nCiao!\nSembra che tu non abbia ancora inserito un IBAN valido per l\'accredito del rimborso sul tuo conto.\n\nSe non l\'hai già fatto, inserisci il tuo IBAN al più presto per ricevere il relativo bonifico:\n\n1. premi il pulsante "Vai al Cashback" in basso;\n\n2. nel dettaglio del tuo Cashback, scorri in basso e premi il pulsante "Imposta IBAN";\n\n3. inserisci un IBAN valido e conferma l\'operazione.\n\nRiceverai un messaggio in app non appena verrà effettuato il bonifico.\n\n',
+};
+
 const bonusvacanzeStart1 = {
   subject: "E' arrivato il Bonus Vacanze!",
   markdown:
@@ -58,6 +64,10 @@ export function GetMessageContent(messageContent: string) {
     }
     case 'cashbackEndPeriod1ErrataCorrigetrxmin50': {
       content = cashbackEndPeriod1ErrataCorrigetrxmin50;
+      break;
+    }
+    case 'cashbackMissingIBAN1': {
+      content = cashbackMissingIBAN1;
       break;
     }
     case 'bonusvacanzeStart1': {
