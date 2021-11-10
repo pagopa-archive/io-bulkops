@@ -31,7 +31,7 @@ const cashbackEndPeriod1Win = {
 const cashbackEndPeriod1SuperWin = {
   subject: 'Congratulazioni, hai diritto al Super Cashback!',
   markdown:
-    "Complimenti, sei tra i **100mila partecipanti** in testa alla classifica **Super Cashback** e **hai diritto a un rimborso di 1500 Euro!**\n\nEntro il 30 novembre 2021, ti sarà accreditato l’importo come previsto dal regolamento.\n\nRiceverai un messaggio quando sarà effettuato il bonifico sull’IBAN che hai già comunicato.\n\nGrazie per aver partecipato!\n\n",
+    "Complimenti, sei tra i **100mila partecipanti** in testa alla classifica **Super Cashback** e **hai diritto a un rimborso di 1500 Euro!**\n\nL’importo ti sarà accreditato entro il 30 novembre 2021, come previsto dal regolamento.\n\nRiceverai un messaggio quando sarà effettuato il bonifico sull’IBAN che hai già comunicato.\n\nGrazie per aver partecipato!\n\n",
 };
 
 const cashbackMissingIBAN1 = {
