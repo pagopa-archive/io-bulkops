@@ -28,6 +28,12 @@ const cashbackEndPeriod1Win = {
     "Ti informiamo che il conteggio per i rimborsi del primo semestre 2021 del programma Cashback si è concluso.\n\nComplimenti!\nIl rimborso ti sarà accreditato **entro 60 giorni dalla fine del periodo** (concluso il 30 giugno 2021). Riceverai un messaggio quando verrà effettuato il bonifico all'IBAN da te scelto.\n\nLa classifica per il Super Cashback **non è ancora definitiva**.\n\nCome stabilito dal [Decreto Legge 30 giugno 2021](https://www.gazzettaufficiale.it/atto/serie_generale/caricaDettaglioAtto/originario?atto.dataPubblicazioneGazzetta=2021-06-30&atto.codiceRedazionale=21G00110&elenco30giorni=true), la graduatoria verrà consolidata al termine delle operazioni relative ai reclami, in carico alla società CONSAP.\n\nSe avrai diritto al Super Cashback di € 1500, l'importo ti sarà accreditato **entro il 30 novembre 2021**. Riceverai un messaggio quando verrà effettuato il bonifico all'IBAN da te scelto.\n\nLo stesso Decreto Legge ha previsto **la sospensione del secondo semestre 2021** del Cashback.\n\nIl prossimo periodo, quindi, inizierà l'**1 gennaio 2022**: se desideri continuare a partecipare al Programma, l'iscrizione avverrà in automatico e potrai disiscriverti in qualsiasi momento.\n\nGrazie per aver partecipato!\n\n",
 };
 
+const cashbackEndPeriod1SuperWin = {
+  subject: 'Congratulazioni, hai diritto al Super Cashback!',
+  markdown:
+    "Complimenti, sei tra i **100mila partecipanti** in testa alla classifica **Super Cashback** e **hai diritto a un rimborso di 1500 Euro!**\n\nL’importo ti sarà accreditato entro il 30 novembre 2021, come previsto dal regolamento.\n\nRiceverai un messaggio quando sarà effettuato il bonifico sull’IBAN che hai già comunicato.\n\nGrazie per aver partecipato!\n\n",
+};
+
 const cashbackMissingIBAN1 = {
   subject: 'Inserisci un IBAN per ricevere il rimborso',
   markdown:
@@ -74,6 +80,10 @@ export function GetMessageContent(messageContent: string) {
     }
     case 'cashbackEndPeriod1Win': {
       content = cashbackEndPeriod1Win;
+      break;
+    }
+    case 'cashbackEndPeriod1SuperWin': {
+      content = cashbackEndPeriod1SuperWin;
       break;
     }
     case 'cashbackMissingIBAN1': {
