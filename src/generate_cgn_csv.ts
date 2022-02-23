@@ -41,23 +41,18 @@ async function main() {
     return;
   }
 
-  // tslint:disable-next-line: no-let
-  let count = 0;
   // tslint:disable-next-line: no-console
   console.log(`cf: ${cf_items.length}`);
   // tslint:disable-next-line: no-console
 
   // send messages
+  fs.writeFileSync(output_cf_csv, CSV.fiscal_code + "\n");
   for (const cf of cf_items) {
-    if (count === 0) {
-      // begin file
-      fs.writeFileSync(output_cf_csv, CSV.fiscal_code + "\n");
-    }
-    if (checkCgnRequirements(String(cf)).isRight()) {
+    const errorOrCfEligible = checkCgnRequirements(String(cf.fiscal_code));
+    if (errorOrCfEligible.isRight() && errorOrCfEligible.value) {
       // save cf
       fs.writeFileSync(output_cf_csv, `${cf.fiscal_code} \n`, { flag: "a+" });
     }
-    count = count + 1;
   }
 }
 
