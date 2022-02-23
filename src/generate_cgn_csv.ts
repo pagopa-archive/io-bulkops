@@ -3,9 +3,7 @@ import * as fs from "fs";
 import { checkCgnRequirements } from "./utils/date_check";
 
 enum CSV {
-  fiscal_code = "fiscal_code",
-  response_code = "response_code",
-  id_message = "id_message"
+  fiscal_code = "fiscal_code"
 }
 
 async function main() {
