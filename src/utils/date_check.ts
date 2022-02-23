@@ -1,7 +1,6 @@
 import { addYears, isAfter } from "date-fns";
 import * as E from "fp-ts/lib/Either";
 import * as O from "fp-ts/lib/Option";
-import * as TE from "fp-ts/lib/TaskEither";
 
 const CGN_LOWER_BOUND_AGE = 18;
 
