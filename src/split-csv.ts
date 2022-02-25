@@ -60,7 +60,7 @@ async function main() {
     }
 
     // save cf
-    fs.writeFileSync(cf_split_csv, `${cf.fiscal_code} \n`, { flag: "a+" });
+    fs.writeFileSync(cf_split_csv, `${cf.fiscal_code}\n`, { flag: "a+" });
 
     count = count + 1;
     if (count === cf_max_count) {
