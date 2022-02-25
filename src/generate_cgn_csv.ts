@@ -51,7 +51,7 @@ async function main() {
     const errorOrCfEligible = checkCgnRequirements(String(cf.fiscal_code));
     if (errorOrCfEligible.isRight() && errorOrCfEligible.value) {
       // save cf
-      fs.writeFileSync(output_cf_csv, `${cf.fiscal_code} \n`, { flag: "a+" });
+      fs.writeFileSync(output_cf_csv, `${cf.fiscal_code}\n`, { flag: "a+" });
     }
   }
 }
