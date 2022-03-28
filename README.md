@@ -31,3 +31,9 @@ SLEEP429_MS="5000"
 # One of: cashbackIBAN1, cashbackTransaction1, bonusvacanzeStart1, customMessageUser1, cgnStart1
 MESSAGE_CONTENT="XXX"
 ```
+
+### For large files
+
+```bash
+export NODE_OPTIONS=--max_old_space_size=4096
+```
