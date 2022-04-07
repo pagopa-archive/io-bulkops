@@ -38,7 +38,6 @@ steps:
 
     mkdir -p output
     split --lines="${ENV_MAX_ROWS_FILE}" "${TIMESTAMP}.txt" "output/splitted_"
-
     wc -l output/splitted_*
 
     az config set extension.use_dynamic_install=yes_without_prompt
