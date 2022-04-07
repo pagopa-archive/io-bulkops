@@ -1,6 +1,21 @@
 pr: none
 trigger: none
 
+parameters:
+  - name: 'INPUT_FILE_NAME'
+    displayName: 'Input file name'
+    type: string
+  - name: 'API_KEY'
+    displayName: 'Api key'
+    type: string
+  - name: 'MESSAGE_FILE_NAME'
+    displayName: 'Message file name'
+    type: string
+  - name: 'MAX_ROWS_FILE'
+    displayName: 'How many rows will contains the files (a low value increase delivery speed, max value is 100000)'
+    type: string
+    default: '50000'
+
 pool:
   vmImage: ubuntu-latest
 
@@ -27,3 +42,7 @@ steps:
 - bash: |
     yarn build
   displayName: 'Build'
+
+- bash: |
+    az --version
+  displayName: 'test'
