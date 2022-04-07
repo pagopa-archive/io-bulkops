@@ -52,6 +52,7 @@ steps:
     cd output
     for filename in splitted_*; do
       [ -e "$filename" ] || continue
+      sleep 2
       echo "${BASE_PATH}/${TIMESTAMP}/${filename}"
       curl --location --request POST "${ENV_LOGIC_APP_URL}" \
         --header 'Content-Type: application/json' \
