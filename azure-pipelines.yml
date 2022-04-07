@@ -68,7 +68,8 @@ steps:
       --container input \
       --source "output/timestamp*" \
       --destination-path "invii_spot/${TIMESTAMP}" \
-      --recursive
+      --recursive \
+      --account-key "${ENV_STORAGE_KEY}"
   env:
     ENV_INPUT_FILE_NAME: '${{ parameters.INPUT_FILE_NAME }}'
     ENV_MAX_ROWS_FILE: '${{ parameters.MAX_ROWS_FILE }}'
