@@ -53,10 +53,19 @@ steps:
     for filename in splitted_*; do
       [ -e "$filename" ] || continue
       echo "${BASE_PATH}/${TIMESTAMP}/${filename}"
+      # curl --location --request POST "${ENV_LOGIC_APP_URL}" \
+      #   --header 'Content-Type: application/json' \
+      #   --data-raw '{
+      #     "filename": "${BASE_PATH}/${TIMESTAMP}/${filename}",
+      #     "api_key": "${ENV_API_KEY}",
+      #     "message_filename": "${ENV_MESSAGE_FILE_NAME}"
+      #    }'
     done
   env:
     ENV_INPUT_FILE_NAME: '${{ parameters.INPUT_FILE_NAME }}'
     ENV_MAX_ROWS_FILE: '${{ parameters.MAX_ROWS_FILE }}'
+    ENV_MESSAGE_FILE_NAME: '${{ parameters.MESSAGE_FILE_NAME }}'
+    ENV_API_KEY: '${{ parameters.API_KEY }}'
     ENV_STORAGE_KEY: '$(STORAGE_KEY)'
-    ENV_LOGIC_APP_KEY: '$(LOGIC_APP_KEY)'
+    ENV_LOGIC_APP_URL: '$(LOGIC_APP_URL)'
   displayName: 'split'
