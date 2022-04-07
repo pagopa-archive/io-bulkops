@@ -65,7 +65,7 @@ steps:
     az config set extension.use_dynamic_install=yes_without_prompt
     az storage blob directory upload \
       --account-name iopstexportdata \
-      --container-name input \
+      --container input \
       --source "output/timestamp*" \
       --destination-path "invii_spot/${TIMESTAMP}" \
       --recursive
