@@ -72,10 +72,10 @@ steps:
       --account-key "${ENV_STORAGE_KEY}"
     
     cd output
-    for filename in "timestamp*"; do
+    for filename in timestamp*; do
+      [ -e "$filename" ] || continue
       echo "invii_spot/${TIMESTAMP}/${filename}"
     done
-
   env:
     ENV_INPUT_FILE_NAME: '${{ parameters.INPUT_FILE_NAME }}'
     ENV_MAX_ROWS_FILE: '${{ parameters.MAX_ROWS_FILE }}'
