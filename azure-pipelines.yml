@@ -21,31 +21,9 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-# - bash: |
-#     echo "current folder: $(pwd)"
-#     FROM_SOURCE=$(cat .node-version || cat .nvmrc)
-#     ls .node-version && echo ".node-version found, value: '$(cat .node-version)'" || echo ".node-version not found" 
-#     ls .nvmrc && echo ".nvmrc found, value: '$(cat .nvmrc)'" || echo ".nvmrc not found" 
-#     echo "set FROM_SOURCE='$FROM_SOURCE'"
-#     echo "##vso[task.setvariable variable=NODE_VERSION]$FROM_SOURCE"
-#   displayName: 'Determine Node.js version from source'
-
-# - task: UseNode@1
-#   inputs:
-#     version: $(NODE_VERSION)
-#   displayName: 'Set up Node.js'
-
-# - bash: |
-#     echo "current folder: $(pwd)"
-#     yarn install --frozen-lockfile --no-progress --non-interactive
-#   displayName: 'Install node modules'
-
-# - bash: |
-#     yarn build
-#   displayName: 'Build'
-
 - bash: |
     TIMESTAMP=$(date +%s)
+    BASE_PATH="invii_spot"
     echo "${TIMESTAMP}"
     echo "${ENV_INPUT_FILE_NAME}"
     echo "${ENV_MAX_ROWS_FILE}"
@@ -53,12 +31,12 @@ steps:
     az storage blob download \
       --account-name iopstexportdata \
       --container-name input \
-      --name "invii_spot/${ENV_INPUT_FILE_NAME}" \
+      --name "${BASE_PATH}/${ENV_INPUT_FILE_NAME}" \
       --file "${TIMESTAMP}.txt" \
       --account-key "${ENV_STORAGE_KEY}"
 
     mkdir -p output
-    split --lines="${ENV_MAX_ROWS_FILE}" "${TIMESTAMP}.txt" "output/timestamp"
+    split --lines="${ENV_MAX_ROWS_FILE}" "${TIMESTAMP}.txt" "output/splitted_"
 
     wc -l output/timestamp*
 
@@ -66,15 +44,15 @@ steps:
     az storage blob directory upload \
       --account-name iopstexportdata \
       --container input \
-      --source "output/timestamp*" \
-      --destination-path "invii_spot/${TIMESTAMP}" \
+      --source "output/splitted_*" \
+      --destination-path "${BASE_PATH}/${TIMESTAMP}" \
       --recursive \
       --account-key "${ENV_STORAGE_KEY}"
     
     cd output
-    for filename in timestamp*; do
+    for filename in splitted_*; do
       [ -e "$filename" ] || continue
-      echo "invii_spot/${TIMESTAMP}/${filename}"
+      echo "${BASE_PATH}/${TIMESTAMP}/${filename}"
     done
   env:
     ENV_INPUT_FILE_NAME: '${{ parameters.INPUT_FILE_NAME }}'
