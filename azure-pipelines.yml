@@ -45,10 +45,12 @@ steps:
 
 - bash: |
     timestamp=$(date +%s)
+    echo $timestamp
+    echo $(INPUT_FILE_NAME)
 
     az storage blob download \
-      --name $(INPUT_FILE_NAME) \
       --container-name input \
+      --name "$(INPUT_FILE_NAME)" \
       --file $timestamp.txt \
       --account-key $(STORAGE_KEY)
     
