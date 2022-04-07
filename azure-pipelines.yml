@@ -63,7 +63,7 @@ steps:
     split --lines="${ENV_MAX_ROWS_FILE}" "${TIMESTAMP}.txt" output/timestamp
     
     ls -la output
-    cat output/timestampaa
+    wc -l output/timestamp*
   env:
     ENV_INPUT_FILE_NAME: '${{ parameters.INPUT_FILE_NAME }}'
     ENV_MAX_ROWS_FILE: '${{ parameters.MAX_ROWS_FILE }}'
