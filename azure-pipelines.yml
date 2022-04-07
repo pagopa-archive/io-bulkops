@@ -47,24 +47,24 @@ steps:
 - bash: |
     TIMESTAMP=$(date +%s)
     echo "${TIMESTAMP}"
-    echo "${INPUT_FILE_NAME}"
-    echo "${MAX_ROWS_FILE}"
+    echo "${ENV_INPUT_FILE_NAME}"
+    echo "${ENV_MAX_ROWS_FILE}"
 
     az storage blob download \
       --container-name input \
-      --name "invii_spot/${INPUT_FILE_NAME}" \
+      --name "invii_spot/${ENV_INPUT_FILE_NAME}" \
       --file "${TIMESTAMP}.txt" \
       --account-name iopstexportdata \
-      --account-key "${STORAGE_KEY}"
+      --account-key "${ENV_STORAGE_KEY}"
     
     ls -la
     
     mkdir -p output
-    split --lines="${MAX_ROWS_FILE}" "${TIMESTAMP}.txt" output/timestamp
+    split --lines="${ENV_MAX_ROWS_FILE}" "${TIMESTAMP}.txt" output/timestamp
     
     ls -la output
   env:
-    INPUT_FILE_NAME: parameters['INPUT_FILE_NAME']
-    MAX_ROWS_FILE: parameters['MAX_ROWS_FILE']
-    STORAGE_KEY: $(STORAGE_KEY)
+    ENV_INPUT_FILE_NAME: ${{ parameters.INPUT_FILE_NAME }}
+    ENV_MAX_ROWS_FILE: ${{ parameters.MAX_ROWS_FILE }}
+    ENV_STORAGE_KEY: $(STORAGE_KEY)
   displayName: 'split'
