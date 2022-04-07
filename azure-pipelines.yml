@@ -64,7 +64,7 @@ steps:
     
     ls -la output
   env:
-    INPUT_FILE_NAME: ${{ parameters.INPUT_FILE_NAME }}
-    MAX_ROWS_FILE: ${{ parameters.MAX_ROWS_FILE }}
+    INPUT_FILE_NAME: parameters['INPUT_FILE_NAME']
+    MAX_ROWS_FILE: parameters['MAX_ROWS_FILE']
     STORAGE_KEY: $(STORAGE_KEY)
   displayName: 'split'
