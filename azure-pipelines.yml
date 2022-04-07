@@ -62,7 +62,7 @@ steps:
 
     wc -l output/timestamp*
 
-    az config set extension.use_dynamic_install=yes_without_prompt'
+    az config set extension.use_dynamic_install=yes_without_prompt
     az storage blob directory upload \
       --account-name iopstexportdata \
       --container-name input \
