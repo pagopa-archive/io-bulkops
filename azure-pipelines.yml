@@ -51,7 +51,7 @@ steps:
 
     az storage blob download \
       --container-name input \
-      --name "${INPUT_FILE_NAME}" \
+      --name "invii_spot/${INPUT_FILE_NAME}" \
       --file "${TIMESTAMP}.txt" \
       --account-name iopstexportdata \
       --account-key "${STORAGE_KEY}"
