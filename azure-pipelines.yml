@@ -70,9 +70,10 @@ steps:
       --destination-path "invii_spot/${TIMESTAMP}" \
       --recursive \
       --account-key "${ENV_STORAGE_KEY}"
-
-    for filename in "output/timestamp*"; do
-      echo $filename
+    
+    cd output
+    for filename in "timestamp*"; do
+      echo "invii_spot/${TIMESTAMP}/${filename}"
     done
 
   env:
