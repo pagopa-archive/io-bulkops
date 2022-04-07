@@ -24,9 +24,10 @@ steps:
 - bash: |
     TIMESTAMP=$(date +%s)
     BASE_PATH="invii_spot"
-    echo "${TIMESTAMP}"
-    echo "${ENV_INPUT_FILE_NAME}"
-    echo "${ENV_MAX_ROWS_FILE}"
+    echo "TIMESTAMP: ${TIMESTAMP}"
+    echo "INPUT_FILE_NAME: ${ENV_INPUT_FILE_NAME}"
+    echo "MESSAGE_FILE_NAME: ${ENV_MESSAGE_FILE_NAME}"
+    echo "MAX_ROWS_FILE: ${ENV_MAX_ROWS_FILE}"
 
     az storage blob download \
       --account-name iopstexportdata \
