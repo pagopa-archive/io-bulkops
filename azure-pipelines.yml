@@ -69,4 +69,4 @@ steps:
     ENV_API_KEY: '${{ parameters.API_KEY }}'
     ENV_STORAGE_KEY: '$(STORAGE_KEY)'
     ENV_LOGIC_APP_URL: '$(LOGIC_APP_URL)'
-  displayName: 'split'
+  displayName: 'split and trigger logic app'
