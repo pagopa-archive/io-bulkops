@@ -51,19 +51,23 @@ steps:
     echo "${ENV_MAX_ROWS_FILE}"
 
     az storage blob download \
+      --account-name iopstexportdata \
       --container-name input \
       --name "invii_spot/${ENV_INPUT_FILE_NAME}" \
       --file "${TIMESTAMP}.txt" \
-      --account-name iopstexportdata \
       --account-key "${ENV_STORAGE_KEY}"
-    
-    ls -la
-    
+
     mkdir -p output
-    split --lines="${ENV_MAX_ROWS_FILE}" "${TIMESTAMP}.txt" output/timestamp
-    
-    ls -la output
+    split --lines="${ENV_MAX_ROWS_FILE}" "${TIMESTAMP}.txt" "output/timestamp"
+
     wc -l output/timestamp*
+
+    az storage blob directory upload \
+      --account-name iopstexportdata \
+      --container-name input \
+      --source "output/timestamp*" \
+      --destination-path "invii_spot/${TIMESTAMP}" \
+      --recursive
   env:
     ENV_INPUT_FILE_NAME: '${{ parameters.INPUT_FILE_NAME }}'
     ENV_MAX_ROWS_FILE: '${{ parameters.MAX_ROWS_FILE }}'
