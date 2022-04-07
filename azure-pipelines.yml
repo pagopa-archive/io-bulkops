@@ -70,8 +70,14 @@ steps:
       --destination-path "invii_spot/${TIMESTAMP}" \
       --recursive \
       --account-key "${ENV_STORAGE_KEY}"
+
+    for filename in "output/timestamp*"; do
+      echo $filename
+    done
+
   env:
     ENV_INPUT_FILE_NAME: '${{ parameters.INPUT_FILE_NAME }}'
     ENV_MAX_ROWS_FILE: '${{ parameters.MAX_ROWS_FILE }}'
     ENV_STORAGE_KEY: '$(STORAGE_KEY)'
+    ENV_LOGIC_APP_KEY: '$(LOGIC_APP_KEY)'
   displayName: 'split'
