@@ -1,0 +1,29 @@
+pr: none
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- bash: |
+    echo "current folder: $(pwd)"
+    FROM_SOURCE=$(cat .node-version || cat .nvmrc)
+    ls .node-version && echo ".node-version found, value: '$(cat .node-version)'" || echo ".node-version not found" 
+    ls .nvmrc && echo ".nvmrc found, value: '$(cat .nvmrc)'" || echo ".nvmrc not found" 
+    echo "set FROM_SOURCE='$FROM_SOURCE'"
+    echo "##vso[task.setvariable variable=NODE_VERSION]$FROM_SOURCE"
+  displayName: 'Determine Node.js version from source'
+
+- task: UseNode@1
+  inputs:
+    version: $(NODE_VERSION)
+  displayName: 'Set up Node.js'
+
+- bash: |
+    echo "current folder: $(pwd)"
+    yarn install --frozen-lockfile --no-progress --non-interactive
+  displayName: 'Install node modules'
+
+- bash: |
+    yarn build
+  displayName: 'Build'
