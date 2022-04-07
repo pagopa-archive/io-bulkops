@@ -44,20 +44,25 @@ steps:
 #   displayName: 'Build'
 
 - bash: |
-    timestamp=$(date +%s)
-    echo $timestamp
-    echo $(INPUT_FILE_NAME)
+    TIMESTAMP=$(date +%s)
+    echo "${TIMESTAMP}"
+    echo "${INPUT_FILE_NAME}"
+    echo "${MAX_ROWS_FILE}"
 
     az storage blob download \
       --container-name input \
-      --name "$(INPUT_FILE_NAME)" \
-      --file $timestamp.txt \
-      --account-key $(STORAGE_KEY)
+      --name "${INPUT_FILE_NAME}" \
+      --file "${TIMESTAMP}.txt" \
+      --account-key "${STORAGE_KEY}"
     
     ls -la
     
     mkdir -p output
-    split --lines=$(MAX_ROWS_FILE) $timestamp output/timestamp
+    split --lines="${MAX_ROWS_FILE}" "${TIMESTAMP}.txt" output/timestamp
     
     ls -la output
+  env:
+    INPUT_FILE_NAME: $(INPUT_FILE_NAME)
+    MAX_ROWS_FILE: $(MAX_ROWS_FILE)
+    STORAGE_KEY: $(STORAGE_KEY)
   displayName: 'split'
