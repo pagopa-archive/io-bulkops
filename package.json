@@ -28,10 +28,12 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
+    "@types/luxon": "^1.27.0",
     "csv-parse": "^4.14.2",
     "dotenv": "^8.2.0",
     "fp-ts": "1.17.4",
     "io-ts": "1.8.5",
+    "luxon": "^1.27.0",
     "node-fetch": "^2.6.0"
   },
   "jest": {
